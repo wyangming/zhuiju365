@@ -13,8 +13,16 @@ import (
 	_ "zhuiju365/routers"
 )
 
-//1135#$
+//2344#$
 func main() {
+	m1 := make(map[int]int)
+	m1[1] = 3
+	m1[8] = 10
+
+	for k, v := range m1 {
+		fmt.Println(fmt.Sprintf("this key is %d value is %d", k, v))
+	}
+
 	web()
 }
 func initData() {
@@ -46,4 +54,5 @@ func web() {
 func retgRouter() {
 	//微信接口
 	beego.Router("/wx", &controllers.WxController{})
+	beego.AutoRouter(&controllers.VideoController{})
 }

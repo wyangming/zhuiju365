@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -46,22 +47,40 @@ func init() {
 	orm.RunSyncdb("default", false, true)
 }
 
-func FindVideo(video_name string) (*Video, *VideoResource, error) {
+//查询一个视频信息，带资源
+func FindVideoRe(videoStr string) (*Video, []*VideoResource, error) {
+	videoId, err := strconv.Atoi(videoStr)
+	if err != nil {
+		return nil, nil, err
+	}
+	o := orm.NewOrm()
+	qs := o.QueryTable("video")
+	video := &Video{}
+	err = qs.Filter("id", videoId).One(video)
+	//如果报错与没有找到
+	if err != nil || len(video.FilmName) < 1 {
+		return nil, nil, err
+	}
+	re_qs := o.QueryTable("video_resource")
+	resources := make([]*VideoResource, 0)
+	_, err = re_qs.Filter("film_id", videoId).All(&resources)
+	if err != nil || len(resources) < 1 {
+		return video, nil, err
+	}
+	return video, resources, nil
+}
+
+//查询一个视频信息，不带资源
+func FindVideo(video_name string) ([]*Video, error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("video")
 	qs = qs.Filter("attachment__contains", "$"+video_name+"#")
-	video := new(Video)
-	err := qs.One(video)
+	videos := make([]*Video, 0)
+	_, err := qs.All(&videos)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	qs_r := o.QueryTable("video_resource")
-	resource := new(VideoResource)
-	err = qs_r.Filter("film_id", video.Id).One(resource)
-	if err != nil {
-		return nil, nil, err
-	}
-	return video, resource, nil
+	return videos, nil
 }
 
 func MysqlTest(str_films []string) {

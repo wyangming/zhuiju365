@@ -1,10 +1,15 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/astaxie/beego"
-	"strings"
 	"zhuiju365/models"
+	"zhuiju365/util"
 	"zhuiju365/wx"
+)
+
+const (
+	Email = "479027247@qq.com"
 )
 
 type WxController struct {
@@ -24,25 +29,54 @@ func (this *WxController) Post() {
 	recmsg := wx.InitRecMsg(str_msg)
 	//如果不是文本类型的处理
 	if recmsg.MsgType != wx.MsgTypeText {
-		rep_str = wx.ReplyText("认别不了此类信息！", recmsg)
+		rep_str = wx.ReplyText("认别不了此类信息！建议与联系邮箱："+Email, recmsg)
 		this.Ctx.WriteString(rep_str)
 	}
 	//如果不是自己的处理
-	if recmsg.FromUserName != "o6nFtwGKAV4SvkzU50iIKwFa8gcc" {
-		rep_str = wx.ReplyText("距离新版本上线还有2天，请耐心等待！", recmsg)
+	/*
+		if recmsg.FromUserName != "o6nFtwGKAV4SvkzU50iIKwFa8gcc" {
+			rep_str = wx.ReplyText("距离新版本上线还有2天，请耐心等待！建议与联系邮箱："+Email, recmsg)
+			this.Ctx.WriteString(rep_str)
+			return
+		}
+	*/
+	//处理要找的资源信息
+	videos, err := models.FindVideo(recmsg.Content)
+	//如果没有找到资源
+	if err != nil || len(videos) < 1 {
+		beego.Error(err)
+		rep_str = wx.ReplyText("亲，没有找到这个资源,您可以换个别的名子试试，如果还没有的话，等有的话会第一时间通知你!建议与联系邮箱："+Email, recmsg)
 		this.Ctx.WriteString(rep_str)
 		return
 	}
-	//处理要找的资源信息
-	video, resource, err := models.FindVideo(recmsg.Content)
-	//如果没有找到资源
-	if err != nil {
-		rep_str = wx.ReplyText("亲，没有找到这个资源，等有的话会第一时间通知你", recmsg)
-		this.Ctx.WriteString(rep_str)
+	base_url_str := util.BaseUrl(this.Ctx)
+	//设置为9是为了最后一个广告
+	article_count := 9
+	if len(videos) < 9 {
+		article_count = len(videos)
 	}
-	resource_str := resource.BaiduYun
-	resource_str = strings.Replace(resource_str, "#", "密码：", -1)
-	rep_str = wx.ReplyText(video.FilmName+"  "+resource_str, recmsg)
-
+	//新闻集合
+	articles := make([]wx.Article, 0)
+	for i := 0; i < article_count; i++ {
+		video := videos[i]
+		wx_url := fmt.Sprintf("%s/video/film/%d", base_url_str, video.Id)
+		article := wx.Article{
+			Title:       video.FilmName,
+			Description: "",
+			PicUrl:      "",
+			Url:         wx_url,
+		}
+		articles = append(articles, article)
+	}
+	//最后沟通内容
+	article_count++
+	article := wx.Article{
+		Title:       "建议与联系邮箱：" + Email,
+		Description: "",
+		PicUrl:      "",
+		Url:         "",
+	}
+	articles = append(articles, article)
+	rep_str = wx.ReplyNews(articles, recmsg)
 	this.Ctx.WriteString(rep_str)
 }

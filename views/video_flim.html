@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>{{.Video.FilmName}}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+</head>
+
+<body>
+<br />
+  <h2>资源均来源于互联网，若涉及版权，请与我联系</h2>
+  <!-- 视频信息 -->
+  {{if .Video}}
+    <h1>视频名称：{{.Video.FilmName}}</h1>
+    {{if .Resources}}
+      <!-- 资源信息 -->
+      <h3>资源信息:</h3>
+      {{range .Resources}}
+        <!-- 下载链接资源 -->
+        {{if .DownloadUrl}}
+          <div style="width: 99%;">
+            下载地址：{{.DownloadUrl}}
+          </div>
+        {{end}}
+        <!-- 百度云盘资源 -->
+        {{if .BaiduYun}}
+          <div style="width: 99%;word-break:break-all;word-wrap:break-word;white-space:normal;">百度云盘地址：{{.BaiduYun}}</div>
+        {{end}}
+      {{end}}
+    {{else}}
+        <h1>没有找到此视频的资源</h1>
+    {{end}}
+  {{else}}
+      <h1>没有找到视频信息</h1>
+  {{end}}
+  <br/>
+  <br/>
+  <h2>有需要此公众号功能<span style="color: red">源码</span>与<span style="color: red">定制</span>开发软件的朋友，也请与我联系</h2>
+</body>
+</html>
