@@ -94,15 +94,39 @@ func MysqlTest(str_films []string) {
 		}
 		rutime, _ := time.Parse("2006-01-02", films[0])
 		title := films[1]
-		name := title[strings.Index(title, "《")+3 : strings.Index(title, "》")]
+		var name string
+		if strings.Index(title, "《") >= 0 {
+			name = title[strings.Index(title, "《")+3 : strings.Index(title, "》")]
+		} else {
+			if strings.Index(title, "[") >= 0 {
+				name = title[strings.Index(title, "[")+1 : strings.Index(title, "]")]
+			} else {
+				return
+			}
+		}
+		name = strings.Replace(name, "DVD中字", "", -1)
+		name = strings.Replace(name, "电影版", "", -1)
+		name = strings.Replace(name, "BD中字", "", -1)
+		name = strings.Replace(name, "DVD国语中字", "", -1)
+		name = strings.Replace(name, "DVD国语", "", -1)
+		name = strings.Replace(name, "DVD粤语中字", "", -1)
+		name = strings.Replace(name, "DVD完美中字", "", -1)
+		name = strings.Replace(name, "无水印", "", -1)
+		name = strings.Replace(name, "DVD高清晰版", "", -1)
+		name = strings.Replace(name, "未分级加长版", "", -1)
+		name = strings.Replace(name, "VCD国语中字", "", -1)
+		name = strings.Replace(name, " ", "", -1)
+		attachment := strings.Replace(name, "/", "#$", -1)
+
 		video := &Video{
 			FilmName:    name,
 			Title:       title,
-			Attachment:  "$" + name + "#",
+			Attachment:  "$" + attachment + "#",
 			Type:        "FILM",
 			SysTime:     nowTime,
 			ReleaseDate: rutime,
 			UpTime:      rutime,
+			Vstatus:     1,
 		}
 		vre := &VideoResource{
 			ReName:      name,
@@ -111,6 +135,7 @@ func MysqlTest(str_films []string) {
 		if count > 5 {
 			vre.BaiduYun = films[3] + "#" + films[4]
 		}
+
 		_, err := o.Insert(video)
 		if err != nil {
 			beego.Error(err)
@@ -124,17 +149,8 @@ func MysqlTest(str_films []string) {
 		}
 		fmt.Println(video)
 		fmt.Println(vre)
-	}
 
-	/*
-		row := &VideoResource{
-			FilmId:   2,
-			ReName:   "doc",
-			Ed2k:     "ed2k",
-			BaiduYun: "baiduyun",
-			Vrbak:    "vrbak",
-		}
-		o := orm.NewOrm()
-		o.Insert(row)
-	*/
+		//fmt.Println("name is ", name)
+		//fmt.Println("attachment is ", attachment)
+	}
 }

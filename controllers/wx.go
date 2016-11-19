@@ -31,6 +31,7 @@ func (this *WxController) Post() {
 	if recmsg.MsgType != wx.MsgTypeText {
 		rep_str = wx.ReplyText("认别不了此类信息！建议与联系邮箱："+Email, recmsg)
 		this.Ctx.WriteString(rep_str)
+		return
 	}
 	//如果不是自己的处理
 	/*
