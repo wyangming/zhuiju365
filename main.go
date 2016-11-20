@@ -18,7 +18,7 @@ func main() {
 	web()
 }
 func initData() {
-	for i := 1; i <= 17; i++ {
+	for i := 1; i <= 1; i++ {
 		count := strconv.Itoa(i)
 		open_file_path := "bdfilm" + string(filepath.Separator) + "bd_file" + count + ".txt"
 		file, err := os.Open(open_file_path)

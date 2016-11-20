@@ -101,7 +101,7 @@ html,body {
       </div>
       <div class="login-content ">
       <div class="form">
-      <form action="#" method="post">
+      <form action="/login" method="post">
         <div class="form-group">
           <div class="col-xs-12  ">
             <div class="input-group">
@@ -131,12 +131,12 @@ html,body {
 </body>
 <script type="text/javascript">
   function checkInput(){
-    var uname = document.getElementById("uname");
+    var uname = document.getElementById("username");
     if(uname.value.length == 0){
-      alert("请输入账号");
+      $("#alt_username").alert();
       return false
     }
-    var pwd = document.getElementById("pwd");
+    var pwd = document.getElementById("password");
     if(pwd.value.length == 0){
       alert("请输入密码");
       return false
@@ -144,5 +144,6 @@ html,body {
     return true
   }
 </script>
+<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 </html>
