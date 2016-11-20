@@ -45,13 +45,12 @@ html,body {
 
 .form {
   width: 100%;
-  max-width:500px;
-  height: 275px;
+  height: auto;
   margin: 25px auto 0px auto;
   padding-top: 25px;
 } 
 .login-content {
-  height: 260px;
+  height: auto;
   width: 100%;
   max-width:500px;
   background-color: rgba(255, 250, 2550, .6);
@@ -101,12 +100,12 @@ html,body {
       </div>
       <div class="login-content ">
       <div class="form">
-      <form action="/login" method="post">
+      <form class="form-signin" id="login-form">
         <div class="form-group">
           <div class="col-xs-12  ">
             <div class="input-group">
               <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-              <input type="text" id="username" name="username" class="form-control" placeholder="用户名">
+              <input type="text" name="username" class="form-control" placeholder="用户名">
             </div>
           </div>
         </div>
@@ -114,13 +113,19 @@ html,body {
           <div class="col-xs-12  ">
             <div class="input-group">
               <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-              <input type="text" id="password" name="password" class="form-control" placeholder="密码">
+
+              <input type="text" name="password" class="form-control" placeholder="密码">
             </div>
           </div>
         </div>
         <div class="form-group form-actions">
           <div class="col-xs-4 col-xs-offset-4 " style="text-align: center;">
-            <button type="submit" class="btn btn-sm btn-info" onclick="return checkInput();"><span class="glyphicon glyphicon-off"></span>登录</button>
+            <button type="submit" class="btn btn-sm btn-info btn-login btn-block"><span class="glyphicon glyphicon-off"></span>登录</button>
+          </div>
+        </div>
+        <div class="form-group form-actions">
+          <div class="col-xs-4 col-xs-offset-4 " style="text-align: center;">
+            <p class="help-block">&nbsp;</p>
           </div>
         </div>
       </form>
@@ -129,21 +134,8 @@ html,body {
   </div>
 </div>
 </body>
-<script type="text/javascript">
-  function checkInput(){
-    var uname = document.getElementById("username");
-    if(uname.value.length == 0){
-      $("#alt_username").alert();
-      return false
-    }
-    var pwd = document.getElementById("password");
-    if(pwd.value.length == 0){
-      alert("请输入密码");
-      return false
-    }
-    return true
-  }
-</script>
 <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/jquery.validate.js"></script>
+<script src="/static/js/zhuiju365.js"></script>
 </html>
