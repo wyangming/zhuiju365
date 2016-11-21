@@ -1,0 +1,31 @@
+@import url('bootstrap.min.css');
+
+body {
+    background: #424f63;
+	font-family: "Glyphicons Halflings";
+    color: #7a7676;
+    line-height: 20px;
+    overflow-x: hidden;
+    font-size: 14px;
+}
+
+input, select, textarea {
+    font-family: 'Glyphicons Halflings';
+    color: #767676;
+}
+
+a {
+    color: #65CEA7;
+}
+
+a:focus, a:active, a:hover {
+    outline: none;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+    color: #353F4F;
+}
+
+hr {
+    border-color: #ddd;
+}
