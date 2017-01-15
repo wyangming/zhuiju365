@@ -27,6 +27,14 @@ func (this *WxController) Post() {
 	var str_msg string = string(this.Ctx.Input.RequestBody)
 	var rep_str string
 	recmsg := wx.InitRecMsg(str_msg)
+	if recmsg.MsgType == wx.MsgTypeEvent {
+		if recmsg.Event == wx.EventSubscribe && recmsg.EventKey == "" {
+			send_msg := "不要回复会电视剧名字跟会员之类的信息，平台不存那些东西，要账号信息可以直接查看历史消息或者等到第二天发新的会员信息。小编是个人兼职做这个公众号的，时间跟经历都非常有限。如果有朋友有兴趣一块儿做的可以直接联系我，邮箱：479027247@qq.com；"
+			rep_str = wx.ReplyText(send_msg, recmsg)
+			this.Ctx.WriteString(rep_str)
+			return
+		}
+	}
 	//如果不是文本类型的处理
 	if recmsg.MsgType != wx.MsgTypeText {
 		rep_str = wx.ReplyText("认别不了此类信息！建议与联系邮箱："+Email, recmsg)
